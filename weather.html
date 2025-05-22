@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Прогноз погоды</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2>Погода в Москве</h2>
+      <div id="weather-info">Загрузка...</div>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "index.html";
+    }
+
+    const apiKey = "You_API_Token_Openweathermap";
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=Moscow&appid=${apiKey}&units=metric&lang=ru`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const weatherEl = document.getElementById("weather-info");
+        weatherEl.innerHTML = `
+          <p><strong>Температура:</strong> ${data.main.temp}°C</p>
+          <p><strong>Условия:</strong> ${data.weather[0].description}</p>
+          <p><strong>Скорость ветра:</strong> ${data.wind.speed} м/с</p>
+        `;
+      })
+      .catch(() => {
+        document.getElementById("weather-info").textContent = "Ошибка загрузки погоды.";
+      });
+  </script>
+</body>
+</html>
